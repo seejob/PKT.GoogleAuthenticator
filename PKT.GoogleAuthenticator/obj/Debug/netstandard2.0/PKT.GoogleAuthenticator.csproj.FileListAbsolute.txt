@@ -1,0 +1,9 @@
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\bin\Debug\netstandard2.0\PKT.GoogleAuthenticator.deps.json
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\bin\Debug\netstandard2.0\PKT.GoogleAuthenticator.dll
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.csprojAssemblyReference.cache
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.csproj.CoreCompileInputs.cache
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.AssemblyInfoInputs.cache
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.AssemblyInfo.cs
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\bin\Debug\netstandard2.0\PKT.GoogleAuthenticator.pdb
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.dll
+D:\WorkArea\Projects\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator\obj\Debug\netstandard2.0\PKT.GoogleAuthenticator.pdb

@@ -1,0 +1,86 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.2",
+    "signature": "216d292e13ae416d7793abeb6f8dc674b12b58ab"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.2": {
+      "PKT.GoogleAuthenticator.Test/1.0.0": {
+        "dependencies": {
+          "PKT.GoogleAuthenticator": "1.0.4"
+        },
+        "runtime": {
+          "PKT.GoogleAuthenticator.Test.dll": {}
+        }
+      },
+      "QRCoder/1.3.5": {
+        "dependencies": {
+          "System.Drawing.Common": "4.5.0-preview1-25914-04"
+        },
+        "runtime": {
+          "lib/netstandard2.0/QRCoder.dll": {
+            "assemblyVersion": "1.3.5.0",
+            "fileVersion": "1.3.5.0"
+          }
+        }
+      },
+      "System.Drawing.Common/4.5.0-preview1-25914-04": {
+        "runtime": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.25914.4"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll": {
+            "rid": "unix",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.25914.4"
+          },
+          "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.25914.4"
+          }
+        }
+      },
+      "PKT.GoogleAuthenticator/1.0.4": {
+        "dependencies": {
+          "QRCoder": "1.3.5"
+        },
+        "runtime": {
+          "PKT.GoogleAuthenticator.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PKT.GoogleAuthenticator.Test/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "QRCoder/1.3.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2j0tYyUp3Y7evIurAxSeRNAm9NwZHdgoHW/GcRSa5yBlxYSsiFTwdtSraJPKmtKHr+/OW6jLyqw5ZgIABFPm2g==",
+      "path": "qrcoder/1.3.5",
+      "hashPath": "qrcoder.1.3.5.nupkg.sha512"
+    },
+    "System.Drawing.Common/4.5.0-preview1-25914-04": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xe9fRaplCuFFkqa2FNSuhZrux4ENP6b1sKxcGIqI0en4aEDMHsHQxtIwwkMsvlKDHoFlLcPkvpUefUnttajA8w==",
+      "path": "system.drawing.common/4.5.0-preview1-25914-04",
+      "hashPath": "system.drawing.common.4.5.0-preview1-25914-04.nupkg.sha512"
+    },
+    "PKT.GoogleAuthenticator/1.0.4": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
