@@ -56,13 +56,13 @@ namespace PKT.GoogleAuthenticator
             string provisionUrl = null;
             if (String.IsNullOrWhiteSpace(issuer))
             {
-                provisionUrl = String.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey);
+                provisionUrl = String.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='));
             }
             else
             {
                 //  https://github.com/google/google-authenticator/wiki/Conflicting-Accounts
                 // Added additional prefix to account otpauth://totp/Company:joe_example@gmail.com for backwards compatibility
-                provisionUrl = String.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey, UrlEncode(issuer));
+                provisionUrl = String.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='), UrlEncode(issuer));
             }
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(provisionUrl, QRCodeGenerator.ECCLevel.Q))

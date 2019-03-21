@@ -5,7 +5,10 @@
     <LangVersion>latest</LangVersion>
     <Authors>PKT</Authors>
     <Product>PKT.GoogleAuthenticator</Product>
-    <Version>1.0.4</Version>
+    <Version>1.1.2</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/bin58200/PKT.GoogleAuthenticator</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
