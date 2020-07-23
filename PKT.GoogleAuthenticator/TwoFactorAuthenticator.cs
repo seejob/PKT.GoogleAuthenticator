@@ -48,7 +48,7 @@ namespace PKT.GoogleAuthenticator
         /// <param name="accountSecretKey">Account Secret Key as byte[]</param>
         /// <param name="QRPixelsPerModule">Number of pixels per QR Module (2 = ~120x120px QRCode)</param>
         /// <returns>SetupCode object</returns>
-        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, byte[] accountSecretKey, int QRPixelsPerModule)
+        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, byte[] accountSecretKey, int QRPixelsPerModule, bool generateQrCode = true)
         {
             if (accountTitleNoSpaces == null) { throw new NullReferenceException("Account Title is null"); }
             accountTitleNoSpaces = RemoveWhitespace(accountTitleNoSpaces);
@@ -56,24 +56,29 @@ namespace PKT.GoogleAuthenticator
             string provisionUrl = null;
             if (String.IsNullOrWhiteSpace(issuer))
             {
-                provisionUrl = String.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='));
+                provisionUrl = string.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='));
             }
             else
             {
                 //  https://github.com/google/google-authenticator/wiki/Conflicting-Accounts
                 // Added additional prefix to account otpauth://totp/Company:joe_example@gmail.com for backwards compatibility
-                provisionUrl = String.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='), UrlEncode(issuer));
+                provisionUrl = string.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='), UrlEncode(issuer));
             }
-            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
-            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(provisionUrl, QRCodeGenerator.ECCLevel.Q))
-            using (QRCode qrCode = new QRCode(qrCodeData))
-            using (Bitmap qrCodeImage = qrCode.GetGraphic(QRPixelsPerModule))
-            using (MemoryStream ms = new MemoryStream())
+
+            string qrCodeUrl = string.Empty;
+            if (generateQrCode)
             {
+                using QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                using QRCodeData qrCodeData = qrGenerator.CreateQrCode(provisionUrl, QRCodeGenerator.ECCLevel.Q);
+                using QRCode qrCode = new QRCode(qrCodeData);
+                using Bitmap qrCodeImage = qrCode.GetGraphic(QRPixelsPerModule);
+                using MemoryStream ms = new MemoryStream();
                 qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
 
-                return new SetupCode(accountTitleNoSpaces, encodedSecretKey, String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray())));
+                qrCodeUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray()));
             }
+
+            return new SetupCode(accountTitleNoSpaces, encodedSecretKey.Trim('='), qrCodeUrl);
         }
 
         private static string RemoveWhitespace(string str)
