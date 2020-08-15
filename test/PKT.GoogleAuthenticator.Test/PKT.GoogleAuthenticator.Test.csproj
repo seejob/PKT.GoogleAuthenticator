@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator.csproj" />
+    <ProjectReference Include="..\..\src\PKT.GoogleAuthenticator\PKT.GoogleAuthenticator.csproj" />
   </ItemGroup>
 
 </Project>
