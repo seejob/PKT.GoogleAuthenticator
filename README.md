@@ -1,6 +1,6 @@
 # PKT.GoogleAuthenticator
 
-Method https://github.com/pktcore/PKT.GoogleAuthenticator/blob/master/PKT.GoogleAuthenticator.Test/Program.cs
+Method https://github.com/pktcore/PKT.GoogleAuthenticator/blob/master/test/PKT.GoogleAuthenticator.Test/Program.cs
 
 Description
 
