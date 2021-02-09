@@ -19,8 +19,8 @@ namespace PKT.GoogleAuthenticator
                 throw new ArgumentNullException("input");
             }
 
-            input = input.TrimEnd('=');
-            int byteCount = input.Length * 5 / 8;
+            input = input.TrimEnd('='); //remove padding characters
+            int byteCount = input.Length * 5 / 8; //this must be TRUNCATED
             byte[] returnArray = new byte[byteCount];
 
             byte curByte = 0, bitsRemaining = 8;

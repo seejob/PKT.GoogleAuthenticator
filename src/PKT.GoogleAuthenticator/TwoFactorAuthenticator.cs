@@ -32,9 +32,9 @@ namespace PKT.GoogleAuthenticator
         /// <param name="accountTitleNoSpaces">Account Title (no spaces)</param>
         /// <param name="accountSecretKey">Account Secret Key</param>
         /// <param name="secretIsBase32">Flag saying if accountSecretKey is in Base32 format or original secret</param>
-        /// <param name="QRPixelsPerModule">Number of pixels per QR Module (2 pixels give ~ 100x100px QRCode)</param>
+        /// <param name="QRPixelsPerModule">Number of pixels per QR Module (2 pixels give ~ 100x100px QRCode, should be 10 or less)</param>
         /// <returns>SetupCode object</returns>
-        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, string accountSecretKey, bool secretIsBase32, int QRPixelsPerModule)
+        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, string accountSecretKey, bool secretIsBase32, int QRPixelsPerModule = 3)
         {
             byte[] key = secretIsBase32 ? Base32Encoding.ToBytes(accountSecretKey) : Encoding.UTF8.GetBytes(accountSecretKey);
             return GenerateSetupCode(issuer, accountTitleNoSpaces, key, QRPixelsPerModule);
@@ -46,36 +46,57 @@ namespace PKT.GoogleAuthenticator
         /// <param name="issuer">Issuer ID (the name of the system, i.e. 'MyApp'), can be omitted but not recommended https://github.com/google/google-authenticator/wiki/Key-Uri-Format </param>
         /// <param name="accountTitleNoSpaces">Account Title (no spaces)</param>
         /// <param name="accountSecretKey">Account Secret Key as byte[]</param>
-        /// <param name="QRPixelsPerModule">Number of pixels per QR Module (2 = ~120x120px QRCode)</param>
+        /// <param name="QRPixelsPerModule">Number of pixels per QR Module (2 = ~120x120px QRCode, should be 10 or less)</param>
         /// <returns>SetupCode object</returns>
-        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, byte[] accountSecretKey, int QRPixelsPerModule, bool generateQrCode = true)
+        public SetupCode GenerateSetupCode(string issuer, string accountTitleNoSpaces, byte[] accountSecretKey, int QRPixelsPerModule = 3, bool generateQrCode = true)
         {
-            if (accountTitleNoSpaces == null) { throw new NullReferenceException("Account Title is null"); }
-            accountTitleNoSpaces = RemoveWhitespace(accountTitleNoSpaces);
+            if (String.IsNullOrWhiteSpace(accountTitleNoSpaces)) { throw new NullReferenceException("Account Title is null"); }
+            accountTitleNoSpaces = RemoveWhitespace(Uri.EscapeUriString(accountTitleNoSpaces));
             string encodedSecretKey = Base32Encoding.ToString(accountSecretKey);
-            string provisionUrl = null;
+            string provisionUrl;
             if (String.IsNullOrWhiteSpace(issuer))
             {
-                provisionUrl = string.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='));
+                provisionUrl = String.Format("otpauth://totp/{0}?secret={1}", accountTitleNoSpaces, encodedSecretKey.Trim('='));
             }
             else
             {
                 //  https://github.com/google/google-authenticator/wiki/Conflicting-Accounts
                 // Added additional prefix to account otpauth://totp/Company:joe_example@gmail.com for backwards compatibility
-                provisionUrl = string.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey.TrimEnd('='), UrlEncode(issuer));
+                provisionUrl = String.Format("otpauth://totp/{2}:{0}?secret={1}&issuer={2}", accountTitleNoSpaces, encodedSecretKey.Trim('='), UrlEncode(issuer));
             }
 
             string qrCodeUrl = string.Empty;
             if (generateQrCode)
             {
-                using QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                using QRCodeData qrCodeData = qrGenerator.CreateQrCode(provisionUrl, QRCodeGenerator.ECCLevel.Q);
-                using QRCode qrCode = new QRCode(qrCodeData);
-                using Bitmap qrCodeImage = qrCode.GetGraphic(QRPixelsPerModule);
-                using MemoryStream ms = new MemoryStream();
-                qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                try
+                {
+                    using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+                    using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(provisionUrl, QRCodeGenerator.ECCLevel.Q))
+                    using (QRCode qrCode = new QRCode(qrCodeData))
+                    using (Bitmap qrCodeImage = qrCode.GetGraphic(QRPixelsPerModule))
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
 
-                qrCodeUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray()));
+                        qrCodeUrl = String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray()));
+                    }
+                }
+                catch (System.TypeInitializationException e)
+                {
+                    if (e.InnerException != null
+                        && e.InnerException.GetType() == typeof(System.DllNotFoundException)
+                        && e.InnerException.Message.Contains("libgdiplus"))
+                    {
+                        throw new MissingDependencyException("It looks like libgdiplus has not been installed - see https://github.com/codebude/QRCoder/issues/227", e);
+                    }
+                }
+                catch (System.Runtime.InteropServices.ExternalException e)
+                {
+                    if (e.Message.Contains("GDI+") && QRPixelsPerModule > 10)
+                    {
+                        throw new QRException($"There was a problem generating a QR code. The value of {nameof(QRPixelsPerModule)} should be set to a value of 10 or less for optimal results.", e);
+                    }
+                }
             }
 
             return new SetupCode(accountTitleNoSpaces, encodedSecretKey.Trim('='), qrCodeUrl);
